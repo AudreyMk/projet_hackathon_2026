@@ -2,3 +2,4 @@ venv/
 test.py
 extrait.csv
 302c3447-8dd7-4589-8dbd-897a148db976.parquet
+data/raw/
