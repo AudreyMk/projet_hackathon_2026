@@ -93,3 +93,4 @@ reports/*
 *.temp
 *.swp
 *.swo
+.claude
