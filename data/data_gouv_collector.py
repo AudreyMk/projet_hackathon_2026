@@ -68,10 +68,17 @@ SOURCES: list[DataSource] = [
 
     DataSource(
         name        = "co2_noaa",
-        url         = "https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_annmean_mlo.txt",
+        url         = "https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_annmean_mlo.csv",
         subfolder   = "co2",
-        filename    = "co2_noaa.txt",
+        filename    = "co2_annmean_mlo.csv",
         description = "Concentrations CO2 atmosphérique annuelles — NOAA Mauna Loa",
+    ),
+        DataSource(
+        name        = "co2_noaa",
+        url         = "https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_mm_mlo.csv",
+        subfolder   = "co2",
+        filename    = "co2_mm_mlo.csv",
+        description = "Concentrations CO2 atmosphérique mensuelles — NOAA Mauna Loa",
     ),
 
     DataSource(
@@ -121,6 +128,14 @@ SOURCES: list[DataSource] = [
         filename    = "ges_annuel.csv",
         description = "Émissions GES annuelles France — CITEPA/Secten",
     ),
+
+    # DataSource(
+    #     name        = "ma_source",
+    #     url         = "https://mon-lien-direct.csv",
+    #     subfolder   = "mon_dossier",
+    #     filename    = "mon_fichier.csv",
+    #     description = "Description lisible",
+    # ),
 
     # ── Pour ajouter une nouvelle source, copier ce bloc ─────────────────────
     # DataSource(
