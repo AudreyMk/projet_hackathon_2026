@@ -1,0 +1,95 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environnements virtuels
+venv/
+.venv/
+env/
+ENV/
+
+# Build / packaging
+build/
+dist/
+.eggs/
+*.egg-info/
+*.egg
+
+# Logs
+*.log
+logs/
+
+# Tests / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Type check / lint / tooling
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# =========================
+# Secrets / variables locales
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# IDE / OS
+# =========================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# =========================
+# ML / Data Science
+# =========================
+mlflow_runs/
+mlruns/
+artifacts/
+
+# Modèles / poids
+models/
+checkpoints/
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+*.onnx
+
+# =========================
+# Données volumineuses ou locales
+# =========================
+data/*
+!data/.gitkeep
+!data/README.md
+
+reports/*
+!reports/.gitkeep
+!reports/README.md
+
+# Si tu veux versionner certains notebooks, enlève cette ligne
+# notebooks/
+
+# =========================
+# Fichiers temporaires
+# =========================
+*.tmp
+*.temp
+*.swp
+*.swo

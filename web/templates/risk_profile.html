@@ -1,0 +1,12 @@
+<div style='background:var(--cd-bg-card);border:1px solid var(--cd-border);border-radius:12px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:24px'>
+  <div>
+    <div style='font-family:Syne;font-size:2.2rem;font-weight:800;color:var(--cd-text)'>{{risk}}<span style='font-size:1rem;color:var(--cd-text-muted)'>/100</span></div>
+    <div style='font-size:0.8rem;color:var(--cd-text-muted)'>Score risque actuel</div>
+  </div>
+  <div style='flex:1'>
+    <div style='background:var(--cd-border);border-radius:6px;height:8px'>
+      <div style='width:{{risk}}%;height:8px;background:{{bar_color}};border-radius:6px'></div>
+    </div>
+    <div style='margin-top:8px;font-size:0.85rem;color:var(--cd-text)'>Niveau : <b>{{risk_label}}</b> — {{jours}} jours > 30°C/an actuellement</div>
+  </div>
+</div>
