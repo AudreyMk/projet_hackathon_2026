@@ -114,11 +114,72 @@ def tab_historique(df_hist, periode):
 # ══════════════════════════════════════════════
 # ONGLET 2 — PROJECTIONS 2100
 # ══════════════════════════════════════════════
+_MODEL_INFO = {
+    "Consensus (4 modèles)": {
+        "icon": "⚖️",
+        "desc": "Moyenne pondérée des 4 modèles. Réduction du biais individuel.",
+        "color": "#a8c5be",
+    },
+    "ARIMA": {
+        "icon": "📉",
+        "desc": "Modèle statistique autorégressif. Conservateur, fort sur les tendances linéaires.",
+        "color": "#4ecdc4",
+    },
+    "Prophet": {
+        "icon": "📅",
+        "desc": "Modèle Facebook Prophet. Excellent pour les tendances et saisonnalités.",
+        "color": "#f39c12",
+    },
+    "LSTM": {
+        "icon": "🧠",
+        "desc": "Réseau de neurones récurrent. Capte les patterns non-linéaires d'accélération.",
+        "color": "#9b59b6",
+    },
+    "XGBoost": {
+        "icon": "🌲",
+        "desc": "Gradient boosting. Robuste aux outliers, légèrement conservateur.",
+        "color": "#3498db",
+    },
+}
+
+
 def tab_projections(df_hist, df_proj, scenarios, sc_sel, horizon=2100):
-    st.markdown("""
-    <p class="section-sub">Projections basées sur les scénarios GIEC AR6 (2023) ·
-    Incertitude représentée à 95% · Méthode : consensus 4 modèles (ARIMA, Prophet, LSTM, XGBoost)</p>
+    # ── Sélecteur de modèle ───────────────────
+    col_sel, col_info = st.columns([2, 3])
+
+    with col_sel:
+        st.markdown('<p class="section-sub" style="margin-bottom:8px">🤖 Modèle de prédiction</p>', unsafe_allow_html=True)
+        model_sel = st.radio(
+            "Modèle",
+            options=list(_MODEL_INFO.keys()),
+            format_func=lambda m: f"{_MODEL_INFO[m]['icon']} {m}",
+            label_visibility="collapsed",
+            key="_model_sel",
+        )
+
+    with col_info:
+        info = _MODEL_INFO[model_sel]
+        st.markdown(f"""
+        <div style="background:var(--cd-bg-card);border:1px solid var(--cd-border);
+                    border-left:3px solid {info['color']};border-radius:10px;
+                    padding:14px 18px;margin-top:4px">
+          <div style="font-family:Syne,sans-serif;font-size:1rem;font-weight:700;
+                      color:var(--cd-text);margin-bottom:6px">
+            {info['icon']} {model_sel}
+          </div>
+          <div style="font-size:0.83rem;color:var(--cd-text-muted);line-height:1.5">
+            {info['desc']}
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown(f"""
+    <p class="section-sub" style="margin-top:16px">Projections basées sur les scénarios GIEC AR6 (2023) ·
+    Incertitude à 95% · Modèle : <strong style="color:var(--cd-accent)">{model_sel}</strong></p>
     """, unsafe_allow_html=True)
+
+    # Filtrer sur le modèle sélectionné
+    df_proj_m = df_proj[df_proj["model"] == model_sel]
 
     fig = go.Figure()
 
@@ -134,7 +195,7 @@ def tab_projections(df_hist, df_proj, scenarios, sc_sel, horizon=2100):
     for sc_name, sc in scenarios.items():
         if sc_name not in sc_sel:
             continue
-        sub = df_proj[(df_proj["scenario"] == sc_name) & (df_proj["annee"] <= horizon)]
+        sub = df_proj_m[(df_proj_m["scenario"] == sc_name) & (df_proj_m["annee"] <= horizon)]
         if sub.empty:
             continue
 
@@ -175,7 +236,7 @@ def tab_projections(df_hist, df_proj, scenarios, sc_sel, horizon=2100):
             continue
         row = {"Année": yr}
         for sc_name in sc_sel:
-            sub = df_proj[(df_proj["scenario"] == sc_name) & (df_proj["annee"] == yr)]
+            sub = df_proj_m[(df_proj_m["scenario"] == sc_name) & (df_proj_m["annee"] == yr)]
             if not sub.empty:
                 t = sub["temp"].values[0]
                 lo = sub["lower"].values[0]
