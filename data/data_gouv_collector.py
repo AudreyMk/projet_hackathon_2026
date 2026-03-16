@@ -59,94 +59,35 @@ class DataSource:
         return RAW_DIR / self.subfolder / self.filename
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# LISTE DES SOURCES
-# Pour ajouter une source : copier un bloc DataSource et l'ajouter ici
-# ─────────────────────────────────────────────────────────────────────────────
 
-SOURCES: list[DataSource] = [
-
-    DataSource(
-        name        = "co2_noaa",
-        url         = "https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_annmean_mlo.csv",
-        subfolder   = "co2",
-        filename    = "co2_annmean_mlo.csv",
-        description = "Concentrations CO2 atmosphérique annuelles — NOAA Mauna Loa",
-    ),
-        DataSource(
-        name        = "co2_noaa",
-        url         = "https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_mm_mlo.csv",
-        subfolder   = "co2",
-        filename    = "co2_mm_mlo.csv",
-        description = "Concentrations CO2 atmosphérique mensuelles — NOAA Mauna Loa",
-    ),
-
-    DataSource(
-        name        = "temp_dept",
-        url         = "https://www.data.gouv.fr/api/1/datasets/r/c04d778f-872a-4f41-a3ac-40a0477b4b78",
-        subfolder   = "meteo",
-        filename    = "temp_dept.csv",
-        description = "Températures départementales — Météo France",
-    ),
-
-    DataSource(
-        name        = "temp_quotidienne",
-        url         = "https://www.data.gouv.fr/api/1/datasets/r/24169144-35d2-4866-a3c3-44b2d916525c",
-        subfolder   = "meteo",
-        filename    = "temp_quotidienne.csv",
-        description = "Températures quotidiennes — Météo France",
-    ),
-
-    DataSource(
-        name        = "precipitations",
-        url         = "https://www.data.gouv.fr/api/1/datasets/r/5c2d02bc-da05-434a-a274-ff4953f74e50",
-        subfolder   = "meteo",
-        filename    = "precipitations.csv",
-        description = "Précipitations mensuelles — Météo France",
-    ),
-
-    DataSource(
-        name        = "indicateurs_extremes",
-        url         = "https://www.data.gouv.fr/api/1/datasets/r/f292971a-dd3c-4d76-9e52-c265e2f909a5",
-        subfolder   = "meteo",
-        filename    = "indicateurs_extremes.csv",
-        description = "Indicateurs d'événements extrêmes — Météo France",
-    ),
-
-    DataSource(
-        name        = "clim_dept",
-        url         = "https://www.data.gouv.fr/api/1/datasets/r/7194000c-de92-4e00-b5a7-4456cb473ec9",
-        subfolder   = "meteo",
-        filename    = "clim_dept.csv",
-        description = "Climatologie départementale — Météo France",
-    ),
-
-    DataSource(
-        name        = "ges_annuel",
-        url         = "https://www.data.gouv.fr/api/1/datasets/r/c4dc2289-2451-482c-a566-857ab34165a7",
-        subfolder   = "ges",
-        filename    = "ges_annuel.csv",
-        description = "Émissions GES annuelles France — CITEPA/Secten",
-    ),
-
-    # DataSource(
-    #     name        = "ma_source",
-    #     url         = "https://mon-lien-direct.csv",
-    #     subfolder   = "mon_dossier",
-    #     filename    = "mon_fichier.csv",
-    #     description = "Description lisible",
-    # ),
-
-    # ── Pour ajouter une nouvelle source, copier ce bloc ─────────────────────
-    # DataSource(
-    #     name        = "ma_source",
-    #     url         = "https://mon-lien-direct.csv",
-    #     subfolder   = "mon_dossier",
-    #     filename    = "mon_fichier.csv",
-    #     description = "Description lisible",
-    # ),
-
-]
+def source(url: str, name: str, folder: str) -> DataSource:
+    """
+    Raccourci pour déclarer une source en une ligne.
+ 
+    Args:
+        url    : URL de téléchargement direct
+        name   : nom du fichier local (ex: "temperatures.csv")
+        folder : dossier de destination — choisir parmi :
+                   "meteo"      données météo brutes
+                   "co2"        concentrations CO2 atmosphériques
+                   "ges"        émissions gaz à effet de serre
+                   "projection" projections climatiques futures
+                   "historique" séries climatiques longues
+ 
+    Exemple :
+        source(
+            url    = "https://mon-lien.csv",
+            name   = "mon_fichier.csv",
+            folder = "meteo",
+        )
+    """
+    return DataSource(
+        name        = Path(name).stem,   # identifiant = nom sans extension
+        url         = url,
+        subfolder   = folder,
+        filename    = name,
+        description = f"{Path(name).stem} ({folder})",
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -306,11 +247,37 @@ def main():
     print("\n" + "=" * 60)
     print("  PIPELINE CLIMAT — FRANCE ENTIÈRE")
     print("=" * 60 + "\n")
-
-    # Étape 1 : Collecte
-    collector = DataCollector(sources=SOURCES)
+ 
+    # ── Ajouter vos sources ici : (url, name, folder) ─────────────────────────
+    #
+    # folder au choix :
+    #   "meteo"       → températures, précipitations, événements extrêmes
+    #   "co2"         → concentrations CO2 atmosphériques
+    #   "ges"         → émissions gaz à effet de serre par secteur
+    #   "projection"  → projections climatiques futures (DRIAS, GIEC)
+    #   "historique"  → séries climatiques longues (avant 1950)
+    #
+    fichiers = [
+        # (url,                                                                          name,                      folder)
+        ("https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_annmean_mlo.txt",            "co2_noaa.txt",            "co2"),
+        ("https://www.data.gouv.fr/api/1/datasets/r/c04d778f-872a-4f41-a3ac-40a0477b4b78", "temp_dept.csv",        "meteo"),
+        ("https://www.data.gouv.fr/api/1/datasets/r/24169144-35d2-4866-a3c3-44b2d916525c", "temp_quotidienne.csv", "meteo"),
+        ("https://www.data.gouv.fr/api/1/datasets/r/5c2d02bc-da05-434a-a274-ff4953f74e50", "precipitations.csv",   "meteo"),
+        ("https://www.data.gouv.fr/api/1/datasets/r/f292971a-dd3c-4d76-9e52-c265e2f909a5", "indicateurs_extremes.csv", "meteo"),
+        ("https://www.data.gouv.fr/api/1/datasets/r/7194000c-de92-4e00-b5a7-4456cb473ec9", "clim_dept.csv",        "meteo"),
+        ("https://www.data.gouv.fr/api/1/datasets/r/c4dc2289-2451-482c-a566-857ab34165a7", "ges_annuel.csv",       "ges"),
+ 
+        # Ajouter une nouvelle source ici :
+        # ("https://mon-lien.csv", "mon_fichier.csv", "projection"),
+    ]
+ 
+    # ── Construction automatique des DataSource ───────────────────────────────
+    sources = [source(url=url, name=name, folder=folder) for url, name, folder in fichiers]
+ 
+    # ── Étape 1 : Collecte ────────────────────────────────────────────────────
+    collector = DataCollector(sources=sources)
     results   = collector.collect_all()
-
-
+ 
+ 
 if __name__ == "__main__":
     main()
