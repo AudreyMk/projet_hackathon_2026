@@ -1,5 +1,6 @@
-.outputs_climat/
-venv/
+data/
+.parquet
+.csv
 .venv/
-env/
-ENV/
+__pycache__/
+.json

@@ -1,4 +1,4 @@
-﻿year;month;decimal_date;average;deseasonalized;ndays;sdev;unc
+year;month;decimal_date;average;deseasonalized;ndays;sdev;unc
 1958;3;1958.2027;315.71;314.44;-1;;-0.99
 1958;4;1958.2877;317.45;315.16;-1;;-0.99
 1958;5;1958.3699;317.51;314.69;-1;;-0.99

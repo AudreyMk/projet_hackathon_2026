@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 pandas
+=======
+pandas
+>>>>>>> 3258ae4463827981a7347e3c6808f0a3be8ec1af
 requests
