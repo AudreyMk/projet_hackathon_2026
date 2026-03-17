@@ -15,9 +15,9 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
-# ─────────────────────────────────────────────
+# 
 # TESTS INGESTION
-# ─────────────────────────────────────────────
+# 
 class TestMeteoFranceIngester:
     def test_generate_temperature_data(self):
         from src.ingestion.meteo_france import MeteoFranceIngester
@@ -72,9 +72,9 @@ class TestCitepaIngester:
         assert total_2024 < total_1990, "Émissions doivent baisser sur la période"
 
 
-# ─────────────────────────────────────────────
+# 
 # TESTS PROCESSING
-# ─────────────────────────────────────────────
+# 
 class TestDataCleaner:
     def test_interpolation_missing_values(self):
         from src.processing.cleaner import DataCleaner
@@ -102,9 +102,9 @@ class TestDataCleaner:
         assert df_clean["temp_moy_c"].max() < 50, "Outlier extrême supprimé"
 
 
-# ─────────────────────────────────────────────
+# 
 # TESTS MODÈLES
-# ─────────────────────────────────────────────
+# 
 class TestBaseModel:
     @pytest.fixture
     def sample_df(self):
@@ -133,9 +133,9 @@ class TestBaseModel:
         assert 0 <= metrics["r2"] <= 1
 
 
-# ─────────────────────────────────────────────
+# 
 # TESTS RECOMMANDATIONS
-# ─────────────────────────────────────────────
+# 
 class TestRecommendationEngine:
     def test_high_risk_generates_fire_recs(self):
         from src.recommendations.citizen_actions import RecommendationEngine

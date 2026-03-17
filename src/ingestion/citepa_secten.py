@@ -53,7 +53,7 @@ class CitepaIngester:
         Tente de télécharger le fichier Secten officiel.
         Fallback sur données synthétiques réalistes si indisponible.
         """
-        logger.info("⚗️  Ingestion émissions GES CITEPA Secten...")
+        logger.info("  Ingestion émissions GES CITEPA Secten...")
 
         try:
             # Le fichier Excel Secten n'est pas toujours accessible directement
@@ -67,10 +67,10 @@ class CitepaIngester:
 
             df = pd.read_excel(raw_path, sheet_name=0, header=2)
             df = self._clean_secten_excel(df)
-            logger.success(f"✅ Secten officiel : {len(df)} lignes")
+            logger.success(f" Secten officiel : {len(df)} lignes")
 
         except Exception as e:
-            logger.warning(f"⚠️ Secten non accessible ({e}) → données synthétiques réalistes")
+            logger.warning(f" Secten non accessible ({e}) → données synthétiques réalistes")
             df = self._generate_realistic_ges()
 
         out = self.output_dir / "ges_france_par_secteur.parquet"
@@ -178,4 +178,4 @@ class CitepaIngester:
 if __name__ == "__main__":
     ing = CitepaIngester()
     files = ing.run()
-    print(f"✅ {len(files)} fichiers : {[f.name for f in files]}")
+    print(f" {len(files)} fichiers : {[f.name for f in files]}")

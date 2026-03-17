@@ -53,28 +53,28 @@ class RecommendationEngine:
         recs = {}
 
         # 1. Canicules (toujours pertinent)
-        recs["☀️ Faire face aux canicules"] = self._recs_canicule(jours_chauds, territoire)
+        recs[" Faire face aux canicules"] = self._recs_canicule(jours_chauds, territoire)
 
         # 2. Sécheresse
         if deficit_precip < self.SEUIL_SECHERESSE or risk_score > 50:
-            recs["💧 Gérer la sécheresse"] = self._recs_secheresse(deficit_precip)
+            recs[" Gérer la sécheresse"] = self._recs_secheresse(deficit_precip)
 
         # 3. Feux de forêt
         if risk_score > self.SEUIL_RISQUE_ELEVE:
-            recs["🔥 Prévention incendies"] = self._recs_feux()
+            recs[" Prévention incendies"] = self._recs_feux()
 
         # 4. Réduction carbone (toujours)
-        recs["♻️ Réduire son empreinte carbone"] = self._recs_carbone()
+        recs[" Réduire son empreinte carbone"] = self._recs_carbone()
 
         # 5. Adaptation territoriale
         if risk_score > 40:
-            recs["🏙️ Adapter son territoire"] = self._recs_adaptation(territoire)
+            recs[" Adapter son territoire"] = self._recs_adaptation(territoire)
 
         return recs
 
-    # ─────────────────────────────────────────
+    # 
     # CANICULES
-    # ─────────────────────────────────────────
+    # 
     def _recs_canicule(self, jours_chauds: float, territoire: str) -> List[Dict]:
         recs = [
             {
@@ -120,9 +120,9 @@ class RecommendationEngine:
         ]
         return recs
 
-    # ─────────────────────────────────────────
+    # 
     # SÉCHERESSE
-    # ─────────────────────────────────────────
+    # 
     def _recs_secheresse(self, deficit: float) -> List[Dict]:
         return [
             {
@@ -159,9 +159,9 @@ class RecommendationEngine:
             },
         ]
 
-    # ─────────────────────────────────────────
+    # 
     # FEUX DE FORÊT
-    # ─────────────────────────────────────────
+    # 
     def _recs_feux(self) -> List[Dict]:
         return [
             {
@@ -190,9 +190,9 @@ class RecommendationEngine:
             },
         ]
 
-    # ─────────────────────────────────────────
+    # 
     # RÉDUCTION CARBONE
-    # ─────────────────────────────────────────
+    # 
     def _recs_carbone(self) -> List[Dict]:
         return [
             {
@@ -230,9 +230,9 @@ class RecommendationEngine:
             },
         ]
 
-    # ─────────────────────────────────────────
+    # 
     # ADAPTATION TERRITORIALE
-    # ─────────────────────────────────────────
+    # 
     def _recs_adaptation(self, territoire: str) -> List[Dict]:
         return [
             {

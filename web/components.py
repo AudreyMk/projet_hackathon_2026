@@ -23,14 +23,14 @@ def render_kpis(df_hist, periode):
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("🌡️ Température actuelle", f"{last['temp_moy']:.1f}°C",
+        st.metric("Température actuelle", f"{last['temp_moy']:.1f}°C",
                   delta=f"+{last['temp_moy'] - first_yr['temp_moy']:.2f}°C depuis {periode[0]}")
     with col2:
-        st.metric("🏭 CO₂ atmosphérique", f"{last['co2_ppm']:.0f} ppm",
+        st.metric("CO₂ atmosphérique", f"{last['co2_ppm']:.0f} ppm",
                   delta=f"+{last['co2_ppm'] - first_yr['co2_ppm']:.0f} ppm")
     with col3:
-        st.metric("☀️ Jours > 30°C / an", f"{last['jours_chauds']} j",
+        st.metric("Jours > 30°C / an", f"{last['jours_chauds']} j",
                   delta=f"+{last['jours_chauds'] - first_yr['jours_chauds']} j")
     with col4:
-        st.metric("⚠️ Score risque", f"{last['risk_score']:.0f} / 100",
+        st.metric("Score risque", f"{last['risk_score']:.0f} / 100",
                   delta="Niveau critique" if last["risk_score"] > 70 else "Niveau modéré")

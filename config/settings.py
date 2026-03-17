@@ -9,9 +9,9 @@ from pathlib import Path
 from dataclasses import dataclass, field
 from typing import List, Dict
 
-# ─────────────────────────────────────────────
-# 📁 CHEMINS
-# ─────────────────────────────────────────────
+# 
+#  CHEMINS
+# 
 ROOT_DIR = Path(__file__).parent.parent
 DATA_DIR = ROOT_DIR / "data"
 RAW_DIR = DATA_DIR / "raw"
@@ -25,9 +25,9 @@ for d in [RAW_DIR, PROCESSED_DIR, EXTERNAL_DIR, REPORTS_DIR, MLFLOW_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
 
-# ─────────────────────────────────────────────
-# 🗺️  TERRITOIRE D'ÉTUDE
-# ─────────────────────────────────────────────
+# 
+#   TERRITOIRE D'ÉTUDE
+# 
 @dataclass
 class Territory:
     """Définit le territoire d'analyse."""
@@ -40,7 +40,7 @@ class Territory:
         "lon_min": -5.5, "lon_max": 10.0
     })
 
-# 👇 CHANGER ICI selon votre territoire
+#  CHANGER ICI selon votre territoire
 TERRITORY = Territory(
     name="France",
     level="national",
@@ -51,9 +51,9 @@ TERRITORY = Territory(
 # TERRITORY = Territory(name="Paris", level="commune", commune_insee="75056")
 
 
-# ─────────────────────────────────────────────
-# 📅 PÉRIODES TEMPORELLES
-# ─────────────────────────────────────────────
+# 
+#  PÉRIODES TEMPORELLES
+# 
 HISTORICAL_START_YEAR = 1900
 HISTORICAL_END_YEAR = 2024
 PROJECTION_YEARS = [2030, 2050, 2100]
@@ -66,9 +66,9 @@ SCENARIOS = {
 }
 
 
-# ─────────────────────────────────────────────
-# 📊 INDICATEURS CLIMATIQUES
-# ─────────────────────────────────────────────
+# 
+#  INDICATEURS CLIMATIQUES
+# 
 INDICATORS = {
     # --- Évolution climatique ---
     "temp_moyenne_annuelle": {
@@ -146,9 +146,9 @@ INDICATORS = {
 }
 
 
-# ─────────────────────────────────────────────
-# 🤖 MODÈLES IA
-# ─────────────────────────────────────────────
+# 
+#  MODÈLES IA
+# 
 MODEL_CONFIG = {
     "arima": {
         "enabled": True,
@@ -191,9 +191,9 @@ TEST_SIZE = 0.2
 RANDOM_STATE = 42
 
 
-# ─────────────────────────────────────────────
-# 🌐 SOURCES DE DONNÉES
-# ─────────────────────────────────────────────
+# 
+#  SOURCES DE DONNÉES
+# 
 DATA_SOURCES = {
     "meteofrance": {
         "base_url": "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets",
@@ -214,11 +214,11 @@ DATA_SOURCES = {
 }
 
 
-# ─────────────────────────────────────────────
-# 🖥️  DASHBOARD
-# ─────────────────────────────────────────────
+# 
+#   DASHBOARD
+# 
 DASHBOARD_CONFIG = {
-    "title": "🌍 ClimaDash — Analyse Climatique France",
+    "title": " ClimaDash — Analyse Climatique France",
     "theme": "dark",
     "map_center": [46.6, 2.3],
     "map_zoom": 5,
@@ -231,8 +231,8 @@ DASHBOARD_CONFIG = {
 }
 
 
-# ─────────────────────────────────────────────
-# 📋 LOGGING
-# ─────────────────────────────────────────────
+# 
+#  LOGGING
+# 
 LOG_LEVEL = "INFO"
 LOG_FILE = ROOT_DIR / "logs" / "pipeline.log"

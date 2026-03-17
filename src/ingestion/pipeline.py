@@ -58,7 +58,7 @@ class DataPipeline:
         Returns:
             dict: {source_name: {"status": "ok"|"error", "files": [...], "rows": int}}
         """
-        console.print(f"\n[bold #6c5ce7]🌍 Pipeline d'ingestion — Territoire : {self.territory.name}[/]")
+        console.print(f"\n[bold #6c5ce7] Pipeline d'ingestion — Territoire : {self.territory.name}[/]")
         console.print(f"[dim]Destination : {RAW_DIR}[/]\n")
 
         if parallel:
@@ -96,7 +96,7 @@ class DataPipeline:
 
     def _run_sequential(self):
         for name, ingester in self.ingesters.items():
-            console.print(f"[cyan]▶ {name}...[/]")
+            console.print(f"[cyan] {name}...[/]")
             self.results[name] = self._run_ingester(name, ingester)
 
     def _run_ingester(self, name: str, ingester) -> dict:
@@ -112,7 +112,7 @@ class DataPipeline:
 
     def _print_summary(self):
         """Affiche un tableau récapitulatif dans le terminal."""
-        table = Table(title="📋 Résumé de l'ingestion", style="bold")
+        table = Table(title=" Résumé de l'ingestion", style="bold")
         table.add_column("Source", style="cyan")
         table.add_column("Statut", justify="center")
         table.add_column("Lignes", justify="right", style="green")
@@ -121,7 +121,7 @@ class DataPipeline:
 
         total_rows = 0
         for name, r in self.results.items():
-            status_str = "✅ OK" if r["status"] == "ok" else "❌ ERREUR"
+            status_str = " OK" if r["status"] == "ok" else " ERREUR"
             table.add_row(
                 name,
                 status_str,
@@ -135,9 +135,9 @@ class DataPipeline:
         console.print(f"\n[bold green]Total : {total_rows:,} lignes ingérées[/]")
 
 
-# ─────────────────────────────────────────────
+# 
 # CLI
-# ─────────────────────────────────────────────
+# 
 def parse_args():
     parser = argparse.ArgumentParser(description="Pipeline d'ingestion climatique")
     parser.add_argument("--territory", default="france",

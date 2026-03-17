@@ -42,7 +42,7 @@ class NOAACo2Ingester:
 
     def _download_co2_annuel(self) -> List[Path]:
         """Télécharge les moyennes annuelles CO₂ (Mauna Loa, depuis 1958)."""
-        logger.info("🏭 Téléchargement CO₂ annuel NOAA...")
+        logger.info(" Téléchargement CO₂ annuel NOAA...")
         try:
             resp = requests.get(self.URL_CO2_ANNUEL, timeout=15)
             resp.raise_for_status()
@@ -57,10 +57,10 @@ class NOAACo2Ingester:
             out = self.output_dir / "co2_annuel.parquet"
             df.to_parquet(out, index=False)
             self._row_count += len(df)
-            logger.success(f"✅ CO₂ : {len(df)} années (1900–2024)")
+            logger.success(f" CO₂ : {len(df)} années (1900–2024)")
             return [out]
         except Exception as e:
-            logger.warning(f"⚠️ NOAA non accessible : {e}. Utilisation données synthétiques.")
+            logger.warning(f" NOAA non accessible : {e}. Utilisation données synthétiques.")
             return self._generate_synthetic_co2()
 
     def _extend_with_ice_core(self, df_modern: pd.DataFrame) -> pd.DataFrame:
@@ -115,4 +115,4 @@ class NOAACo2Ingester:
 if __name__ == "__main__":
     ing = NOAACo2Ingester()
     files = ing.run()
-    print(f"✅ {len(files)} fichiers : {[f.name for f in files]}")
+    print(f" {len(files)} fichiers : {[f.name for f in files]}")

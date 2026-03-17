@@ -59,9 +59,9 @@ class MeteoFranceIngester:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self._row_count = 0
 
-    # ─────────────────────────────────────────
+    # 
     # POINT D'ENTRÉE
-    # ─────────────────────────────────────────
+    # 
     def run(self) -> List[Path]:
         """Lance l'ingestion complète. Retourne la liste des fichiers créés."""
         files = []
@@ -73,12 +73,12 @@ class MeteoFranceIngester:
     def get_row_count(self) -> int:
         return self._row_count
 
-    # ─────────────────────────────────────────
+    # 
     # LISTE DES STATIONS
-    # ─────────────────────────────────────────
+    # 
     def _download_stations_info(self) -> List[Path]:
         """Télécharge la liste des stations météo françaises."""
-        logger.info("📡 Téléchargement liste des stations Météo France...")
+        logger.info(" Téléchargement liste des stations Météo France...")
 
         url = "https://donneespubliques.meteofrance.fr/donnees_libres/Txt/Synop/postesSynop.json"
         try:
@@ -90,11 +90,11 @@ class MeteoFranceIngester:
             out = self.output_dir / "stations_synop.parquet"
             df.to_parquet(out, index=False)
             self._row_count += len(df)
-            logger.success(f"✅ Stations : {len(df)} stations → {out.name}")
+            logger.success(f" Stations : {len(df)} stations → {out.name}")
             return [out]
 
         except Exception as e:
-            logger.warning(f"⚠️ Stations non disponibles : {e}. Génération données simulées.")
+            logger.warning(f" Stations non disponibles : {e}. Génération données simulées.")
             return self._generate_mock_stations()
 
     def _generate_mock_stations(self) -> List[Path]:
@@ -115,15 +115,15 @@ class MeteoFranceIngester:
         self._row_count += len(df)
         return [out]
 
-    # ─────────────────────────────────────────
+    # 
     # TEMPÉRATURES ANNUELLES (1900 → aujourd'hui)
-    # ─────────────────────────────────────────
+    # 
     def _download_temperature_annuelle(self) -> List[Path]:
         """
         Télécharge ou génère les anomalies de température annuelles.
         Source principale : données de référence Météo France.
         """
-        logger.info("🌡️  Téléchargement températures historiques (1900-2024)...")
+        logger.info("  Téléchargement températures historiques (1900-2024)...")
 
         # Tenter l'API OpenDataSoft
         try:
@@ -132,10 +132,10 @@ class MeteoFranceIngester:
                 out = self.output_dir / "temperatures_annuelles.parquet"
                 df.to_parquet(out, index=False)
                 self._row_count += len(df)
-                logger.success(f"✅ Températures : {len(df)} lignes")
+                logger.success(f" Températures : {len(df)} lignes")
                 return [out]
         except Exception as e:
-            logger.warning(f"⚠️ API non accessible : {e}")
+            logger.warning(f" API non accessible : {e}")
 
         # Fallback : données réalistes simulées (basées sur GIEC 2023)
         return self._generate_realistic_temperature_data()
@@ -170,7 +170,7 @@ class MeteoFranceIngester:
         """
         import numpy as np
 
-        logger.info("📊 Génération données températures réalistes (fallback)...")
+        logger.info(" Génération données températures réalistes (fallback)...")
         np.random.seed(42)
 
         years = list(range(HISTORICAL_START_YEAR, HISTORICAL_END_YEAR + 1))
@@ -220,15 +220,15 @@ class MeteoFranceIngester:
         out = self.output_dir / "temperatures_annuelles.parquet"
         df.to_parquet(out, index=False)
         self._row_count += len(df)
-        logger.success(f"✅ Données simulées réalistes : {len(df)} années")
+        logger.success(f" Données simulées réalistes : {len(df)} années")
         return [out]
 
-    # ─────────────────────────────────────────
+    # 
     # DONNÉES DE RÉFÉRENCE CLIMATIQUE
-    # ─────────────────────────────────────────
+    # 
     def _download_reference_climatique(self) -> List[Path]:
         """Télécharge les normales climatiques (1961-1990, 1991-2020)."""
-        logger.info("📏 Téléchargement normales climatiques...")
+        logger.info(" Téléchargement normales climatiques...")
 
         normales = {
             "1961_1990": {"temp_moy": 11.8, "precip": 720},
@@ -243,10 +243,10 @@ class MeteoFranceIngester:
         return [out]
 
 
-# ─────────────────────────────────────────────
+# 
 # CLI STANDALONE
-# ─────────────────────────────────────────────
+# 
 if __name__ == "__main__":
     ingester = MeteoFranceIngester()
     files = ingester.run()
-    print(f"✅ {len(files)} fichiers créés : {[f.name for f in files]}")
+    print(f" {len(files)} fichiers créés : {[f.name for f in files]}")

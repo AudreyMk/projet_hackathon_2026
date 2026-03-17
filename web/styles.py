@@ -4,9 +4,9 @@ _CSS = """
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-/* ══════════════════════════════════════════════
+/* 
    Variables — dark (défaut)
-   ══════════════════════════════════════════════ */
+    */
 :root {
     --cd-green:        #0e7c61;
     --cd-green-light:  #13a37f;
@@ -34,9 +34,9 @@ _CSS = """
     --cd-transition:   0.18s ease;
 }
 
-/* ══════════════════════════════════════════════
+/* 
    Variables — light
-   ══════════════════════════════════════════════ */
+    */
 @media (prefers-color-scheme: light) {
     :root {
         --cd-bg:           #f4faf8;
@@ -59,25 +59,25 @@ _CSS = """
     }
 }
 
-/* ══════════════════════════════════════════════
+/* 
    Masquer éléments Streamlit parasites
-   ══════════════════════════════════════════════ */
+    */
 #MainMenu, footer[class*="css"], header[class*="css"] { display: none !important; }
 [data-testid="stDecoration"] { display: none !important; }
 .viewerBadge_container__1QSob { display: none !important; }
 button[title="View fullscreen"] { display: none !important; }
 
-/* ══════════════════════════════════════════════
+/* 
    Scrollbar personnalisée
-   ══════════════════════════════════════════════ */
+    */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--cd-bg); }
 ::-webkit-scrollbar-thumb { background: var(--cd-border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--cd-green); }
 
-/* ══════════════════════════════════════════════
+/* 
    Base
-   ══════════════════════════════════════════════ */
+    */
 html, body, [class*="css"] {
     font-family: 'DM Sans', sans-serif;
     background-color: var(--cd-bg);
@@ -89,9 +89,9 @@ html, body, [class*="css"] {
 }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ══════════════════════════════════════════════
+/* 
    Sidebar
-   ══════════════════════════════════════════════ */
+    */
 [data-testid="stSidebar"] {
     background: var(--cd-bg-card);
     border-right: 1px solid var(--cd-border);
@@ -117,14 +117,14 @@ html, body, [class*="css"] {
     gap: 6px;
 }
 
-/* ══════════════════════════════════════════════
+/* 
    Bouton primaire — override Streamlit
-   ══════════════════════════════════════════════ */
+    */
 .stButton > button[kind="primary"],
 .stButton > button[data-testid="baseButton-primary"] {
-    background: linear-gradient(135deg, var(--cd-green) 0%, var(--cd-green-light) 100%) !important;
+    background: linear-gradient(135deg, #4d6b63 0%, #5c7d74 100%) !important;
     border: none !important;
-    color: #ffffff !important;
+    color: #e8eeec !important;
     font-family: 'DM Sans', sans-serif !important;
     font-weight: 600 !important;
     font-size: 0.85rem !important;
@@ -132,12 +132,12 @@ html, body, [class*="css"] {
     border-radius: 8px !important;
     padding: 10px 20px !important;
     transition: all var(--cd-transition) !important;
-    box-shadow: 0 2px 12px rgba(14,124,97,0.35) !important;
+    box-shadow: 0 2px 8px rgba(30,60,50,0.25) !important;
 }
 .stButton > button[kind="primary"]:hover,
 .stButton > button[data-testid="baseButton-primary"]:hover {
     transform: translateY(-1px) !important;
-    box-shadow: 0 4px 20px rgba(14,124,97,0.55) !important;
+    box-shadow: 0 4px 14px rgba(30,60,50,0.38) !important;
 }
 .stButton > button[kind="primary"]:active,
 .stButton > button[data-testid="baseButton-primary"]:active {
@@ -157,9 +157,9 @@ html, body, [class*="css"] {
     color: var(--cd-green) !important;
 }
 
-/* ══════════════════════════════════════════════
+/* 
    Hero
-   ══════════════════════════════════════════════ */
+    */
 .hero-wrap {
     background: var(--cd-hero-grad);
     border: 1px solid var(--cd-border);
@@ -255,9 +255,9 @@ html, body, [class*="css"] {
 }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-/* ══════════════════════════════════════════════
+/* 
    KPI Cards
-   ══════════════════════════════════════════════ */
+    */
 .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
 .kpi-card {
     background: var(--cd-bg-card);
@@ -284,18 +284,18 @@ html, body, [class*="css"] {
 .kpi-delta { font-size: 0.8rem; margin-top: 6px; }
 .kpi-up { color: #e74c3c; } .kpi-down { color: var(--cd-green); } .kpi-neutral { color: #f39c12; }
 
-/* ══════════════════════════════════════════════
+/* 
    Section titles
-   ══════════════════════════════════════════════ */
+    */
 .section-title {
     font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 700;
     color: var(--cd-text); margin: 0 0 4px 0;
 }
 .section-sub { font-size: 0.85rem; color: var(--cd-text-muted); margin-bottom: 18px; line-height: 1.5; }
 
-/* ══════════════════════════════════════════════
+/* 
    Alert card
-   ══════════════════════════════════════════════ */
+    */
 .alert-card {
     background: var(--cd-alert-bg);
     border: 1px solid var(--cd-alert-border);
@@ -308,9 +308,9 @@ html, body, [class*="css"] {
 .alert-card h4 { color: #e74c3c; margin: 0 0 6px 0; font-size: 0.9rem; font-weight: 600; }
 .alert-card p  { color: var(--cd-alert-text); margin: 0; font-size: 0.82rem; line-height: 1.5; }
 
-/* ══════════════════════════════════════════════
+/* 
    Rec cards
-   ══════════════════════════════════════════════ */
+    */
 .rec-card {
     background: var(--cd-bg-card);
     border: 1px solid var(--cd-border);
@@ -333,9 +333,9 @@ html, body, [class*="css"] {
 .rec-prio-moyenne { border-left: 3px solid #f39c12; }
 .rec-prio-basse   { border-left: 3px solid var(--cd-green); }
 
-/* ══════════════════════════════════════════════
+/* 
    Streamlit overrides — Tabs
-   ══════════════════════════════════════════════ */
+    */
 .stTabs [data-baseweb="tab-list"] {
     background: var(--cd-bg-card);
     border: 1px solid var(--cd-border);
@@ -363,9 +363,9 @@ html, body, [class*="css"] {
     padding-top: 4px !important;
 }
 
-/* ══════════════════════════════════════════════
+/* 
    Streamlit overrides — Metrics
-   ══════════════════════════════════════════════ */
+    */
 div[data-testid="stMetric"] {
     background: var(--cd-bg-card);
     border-radius: var(--cd-radius);
@@ -389,9 +389,9 @@ div[data-testid="stMetric"] [data-testid="stMetricDelta"] {
     font-size: 0.78rem !important;
 }
 
-/* ══════════════════════════════════════════════
+/* 
    Streamlit overrides — Inputs
-   ══════════════════════════════════════════════ */
+    */
 .stSelectbox label, .stSlider label, .stMultiSelect label,
 .stNumberInput label, .stCheckbox label {
     color: var(--cd-text-muted) !important; font-size: 0.8rem !important;
@@ -413,9 +413,9 @@ div[data-testid="stMetric"] [data-testid="stMetricDelta"] {
     border-radius: 8px !important;
 }
 
-/* ══════════════════════════════════════════════
+/* 
    Streamlit overrides — Expanders
-   ══════════════════════════════════════════════ */
+    */
 [data-testid="stExpander"] {
     border: 1px solid var(--cd-border) !important;
     border-radius: 10px !important;
@@ -439,32 +439,32 @@ div[data-testid="stMetric"] [data-testid="stMetricDelta"] {
     padding: 16px !important;
 }
 
-/* ══════════════════════════════════════════════
+/* 
    Streamlit overrides — Dataframes
-   ══════════════════════════════════════════════ */
+    */
 [data-testid="stDataFrame"] {
     border-radius: 10px !important;
     overflow: hidden !important;
     border: 1px solid var(--cd-border) !important;
 }
 
-/* ══════════════════════════════════════════════
+/* 
    Streamlit overrides — Divider
-   ══════════════════════════════════════════════ */
+    */
 hr[data-testid="stDivider"] {
     border-color: var(--cd-border) !important;
     margin: 10px 0 !important;
 }
 
-/* ══════════════════════════════════════════════
+/* 
    Streamlit overrides — Alerts (success/info/warning)
-   ══════════════════════════════════════════════ */
+    */
 [data-testid="stAlert"] {
     border-radius: 10px !important;
     border-width: 1px !important;
 }
 
-/* ── Plotly ── */
+/*  Plotly  */
 .js-plotly-plot { border-radius: 12px; overflow: hidden; }
 .modebar { opacity: 0.4 !important; transition: opacity 0.2s !important; }
 .modebar:hover { opacity: 1 !important; }

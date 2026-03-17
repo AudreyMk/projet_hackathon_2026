@@ -51,14 +51,14 @@ class DataCleaner:
 
         for name, path in datasets.items():
             if path.exists():
-                logger.info(f"🧹 Nettoyage : {name}")
+                logger.info(f" Nettoyage : {name}")
                 df_clean, report = self.clean_dataset(pd.read_parquet(path), name)
                 out = PROCESSED_DIR / f"{name}_clean.parquet"
                 df_clean.to_parquet(out, index=False)
                 results[name] = {"path": out, "report": report}
-                logger.success(f"✅ {name} : {len(df_clean)} lignes → {out.name}")
+                logger.success(f" {name} : {len(df_clean)} lignes → {out.name}")
             else:
-                logger.warning(f"⚠️ Fichier manquant : {path}")
+                logger.warning(f" Fichier manquant : {path}")
 
         return results
 
@@ -86,7 +86,7 @@ class DataCleaner:
         for col in numeric_cols:
             missing_ratio = df[col].isna().mean()
             if missing_ratio > self.MAX_MISSING_RATIO:
-                logger.warning(f"  ⚠️ {col} : {missing_ratio:.1%} manquants (> seuil {self.MAX_MISSING_RATIO:.0%})")
+                logger.warning(f"   {col} : {missing_ratio:.1%} manquants (> seuil {self.MAX_MISSING_RATIO:.0%})")
                 report["actions"].append(f"{col}: {missing_ratio:.1%} manquants → colonne marquée")
                 df[f"{col}_quality"] = (~df[col].isna()).astype(int)
             elif missing_ratio > 0:
@@ -135,7 +135,7 @@ class DataCleaner:
         from rich.console import Console
         console = Console()
 
-        table = Table(title="📋 Rapport de nettoyage")
+        table = Table(title=" Rapport de nettoyage")
         table.add_column("Dataset", style="cyan")
         table.add_column("Lignes initiales", justify="right")
         table.add_column("Lignes finales", justify="right")
@@ -155,4 +155,4 @@ class DataCleaner:
 if __name__ == "__main__":
     cleaner = DataCleaner()
     results = cleaner.clean_all()
-    print(f"✅ {len(results)} datasets nettoyés")
+    print(f" {len(results)} datasets nettoyés")

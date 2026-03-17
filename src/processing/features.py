@@ -41,7 +41,7 @@ class ClimateFeatureEngineer:
 
     def build_all(self) -> pd.DataFrame:
         """Construit toutes les features et sauvegarde le dataset master."""
-        logger.info("🔧 Feature engineering — construction des indicateurs...")
+        logger.info(" Feature engineering — construction des indicateurs...")
 
         # Chargement des datasets nettoyés
         temp_df = self._load("temperatures_clean.parquet")
@@ -52,7 +52,7 @@ class ClimateFeatureEngineer:
         # Construction du dataset maître (index = année)
         df = temp_df[["annee"]].copy() if temp_df is not None else pd.DataFrame({"annee": range(1900, 2025)})
 
-        # ── Indicateurs température ──────────────────
+        #  Indicateurs température 
         if temp_df is not None:
             df = df.merge(temp_df[["annee", "temp_moy_c", "jours_chauds_30", "jours_gel", "precip_mm"]],
                           on="annee", how="left")
@@ -81,7 +81,7 @@ class ClimateFeatureEngineer:
                 df["deficit_precip_pct"] = ((df["precip_mm"] - ref_precip) / ref_precip * 100).round(2)
                 df["annee_seche"] = (df["deficit_precip_pct"] < -10).astype(int)
 
-        # ── Indicateurs CO₂ ────────────────────────
+        #  Indicateurs CO₂ 
         if co2_df is not None:
             df = df.merge(co2_df[["annee", "co2_ppm"]], on="annee", how="left")
 
@@ -89,7 +89,7 @@ class ClimateFeatureEngineer:
             df["co2_variation_annuelle"] = df["co2_ppm"].diff().round(3)
             df["co2_acceleration"] = df["co2_variation_annuelle"].diff().round(4)
 
-        # ── Indicateurs GES ─────────────────────────
+        #  Indicateurs GES 
         if ges_df is not None:
             ges_total = ges_df[ges_df["secteur"] == "TOTAL"][["annee", "emissions_mtco2eq"]].copy()
             ges_total.rename(columns={"emissions_mtco2eq": "ges_total_mtco2eq"}, inplace=True)
@@ -105,17 +105,17 @@ class ClimateFeatureEngineer:
                 df["ges_vs_1990_pct"] = ((df["ges_total_mtco2eq"] - ges_1990[0]) / ges_1990[0] * 100).round(2)
                 df["objectif_2030_ecart"] = df["ges_total_mtco2eq"] - (ges_1990[0] * 0.45)
 
-        # ── Empreinte carbone ───────────────────────
+        #  Empreinte carbone 
         if empreinte_df is not None:
             df = df.merge(
                 empreinte_df[["annee", "empreinte_totale_tco2eq", "part_importee_tco2eq"]],
                 on="annee", how="left"
             )
 
-        # ── Score de risque composite ───────────────
+        #  Score de risque composite 
         df = self._compute_risk_score(df)
 
-        # ── Variables de lags (pour les modèles ML) ─
+        #  Variables de lags (pour les modèles ML) 
         df = self._add_lag_features(df, target="temp_moy_c", lags=[1, 2, 3, 5, 10])
         if "co2_ppm" in df.columns:
             df = self._add_lag_features(df, target="co2_ppm", lags=[1, 2, 5])
@@ -123,19 +123,19 @@ class ClimateFeatureEngineer:
         # Sauvegarde
         out = self.output_dir / "master_features.parquet"
         df.to_parquet(out, index=False)
-        logger.success(f"✅ Master features : {len(df)} lignes × {len(df.columns)} colonnes → {out.name}")
+        logger.success(f" Master features : {len(df)} lignes × {len(df.columns)} colonnes → {out.name}")
         self.features_df = df
         return df
 
-    # ─────────────────────────────────────────────
+    # 
     # HELPERS
-    # ─────────────────────────────────────────────
+    # 
     def _load(self, filename: str) -> pd.DataFrame | None:
         """Charge un parquet depuis le dossier processed/."""
         path = self.output_dir / filename
         if path.exists():
             return pd.read_parquet(path)
-        logger.warning(f"⚠️ {filename} introuvable — indicateur ignoré")
+        logger.warning(f" {filename} introuvable — indicateur ignoré")
         return None
 
     @staticmethod
@@ -194,6 +194,6 @@ class ClimateFeatureEngineer:
 if __name__ == "__main__":
     engineer = ClimateFeatureEngineer()
     df = engineer.build_all()
-    print(f"\n📊 Colonnes disponibles ({len(df.columns)}) :")
+    print(f"\n Colonnes disponibles ({len(df.columns)}) :")
     for c in df.columns:
         print(f"  - {c}")

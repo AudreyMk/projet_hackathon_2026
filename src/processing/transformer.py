@@ -41,12 +41,12 @@ class DataTransformer:
         self._scalers: dict = {}
         self._master_df: Optional[pd.DataFrame] = None
 
-    # ─────────────────────────────────────────────
+    # 
     # POINT D'ENTRÉE
-    # ─────────────────────────────────────────────
+    # 
     def run(self) -> dict:
         """Lance toutes les transformations. Retourne les chemins de sortie."""
-        logger.info("🔄 Transformation des données...")
+        logger.info(" Transformation des données...")
         results = {}
 
         # 1. Chargement
@@ -67,7 +67,7 @@ class DataTransformer:
             master.to_csv(self.output_dir / "master_features.csv", index=False)
             results["master"] = out
             logger.success(
-                f"✅ Master dataset : {len(master)} lignes × {len(master.columns)} cols"
+                f" Master dataset : {len(master)} lignes × {len(master.columns)} cols"
             )
 
         # 4. Jeu de données modèle (normalisé)
@@ -79,9 +79,9 @@ class DataTransformer:
 
         return results
 
-    # ─────────────────────────────────────────────
+    # 
     # CHARGEMENT
-    # ─────────────────────────────────────────────
+    # 
     def _load_cleaned_datasets(self) -> dict:
         datasets = {}
         files = {
@@ -95,12 +95,12 @@ class DataTransformer:
             path = self.output_dir / fname
             if path.exists():
                 datasets[name] = pd.read_parquet(path)
-                logger.info(f"  ✓ {name} chargé ({len(datasets[name])} lignes)")
+                logger.info(f"   {name} chargé ({len(datasets[name])} lignes)")
             else:
                 # Génération de données synthétiques pour les fichiers manquants
                 datasets[name] = self._generate_fallback(name)
                 if datasets[name] is not None:
-                    logger.warning(f"  ⚠️ {name} → données synthétiques (fallback)")
+                    logger.warning(f"   {name} → données synthétiques (fallback)")
         return datasets
 
     def _generate_fallback(self, name: str) -> Optional[pd.DataFrame]:
@@ -142,9 +142,9 @@ class DataTransformer:
             })
         return None
 
-    # ─────────────────────────────────────────────
+    # 
     # AGRÉGATIONS
-    # ─────────────────────────────────────────────
+    # 
     def _aggregate_decennal(self, df: pd.DataFrame, col: str) -> pd.DataFrame:
         """Agrège une variable par décennie."""
         df = df.copy()
@@ -160,12 +160,12 @@ class DataTransformer:
 
         out = self.output_dir / f"{col}_decennal.parquet"
         agg.to_parquet(out, index=False)
-        logger.info(f"  ✓ Agrégat décennal '{col}' → {out.name}")
+        logger.info(f"   Agrégat décennal '{col}' → {out.name}")
         return agg
 
-    # ─────────────────────────────────────────────
+    # 
     # MERGE MULTI-SOURCE
-    # ─────────────────────────────────────────────
+    # 
     def _build_master_dataset(self, datasets: dict) -> Optional[pd.DataFrame]:
         """
         Construit le dataset maître par jointure sur l'année.
@@ -175,7 +175,7 @@ class DataTransformer:
         auront des NaN pour les années antérieures → gérés par les modèles.
         """
         if "temperatures" not in datasets:
-            logger.error("❌ Températures manquantes — impossible de construire le master dataset")
+            logger.error(" Températures manquantes — impossible de construire le master dataset")
             return None
 
         master = datasets["temperatures"].copy()
@@ -208,14 +208,14 @@ class DataTransformer:
                 on="annee", how="left"
             )
 
-        # ── Features dérivées ─────────────────────
+        #  Features dérivées 
         master = self._add_derived_features(master)
 
         # Tri chronologique + reset index
         master = master.sort_values("annee").reset_index(drop=True)
 
         logger.info(
-            f"  ✓ Master dataset construit : {len(master)} lignes × {len(master.columns)} colonnes"
+            f"   Master dataset construit : {len(master)} lignes × {len(master.columns)} colonnes"
         )
         return master
 
@@ -272,9 +272,9 @@ class DataTransformer:
         df["score_risque_climatique"] = (score / w_total * 100).round(1) if w_total > 0 else 50.0
         return df
 
-    # ─────────────────────────────────────────────
+    # 
     # EXPORT MODÈLE
-    # ─────────────────────────────────────────────
+    # 
     def _export_model_ready(self, df: pd.DataFrame) -> Path:
         """
         Exporte un jeu de données normalisé, prêt pour l'entraînement des modèles.
@@ -302,12 +302,12 @@ class DataTransformer:
 
         out = self.output_dir / "model_ready_scaled.parquet"
         df_scaled.to_parquet(out, index=False)
-        logger.info(f"  ✓ Données modèle normalisées : {out.name} ({len(valid_cols)} features)")
+        logger.info(f"   Données modèle normalisées : {out.name} ({len(valid_cols)} features)")
         return out
 
-    # ─────────────────────────────────────────────
+    # 
     # EXPORT GEOJSON
-    # ─────────────────────────────────────────────
+    # 
     def _export_geojson_summary(self, df: Optional[pd.DataFrame]) -> Path:
         """
         Exporte un résumé GeoJSON simplifié pour la cartographie Streamlit.
@@ -352,7 +352,7 @@ class DataTransformer:
         with open(out, "w", encoding="utf-8") as f:
             json.dump(geojson, f, ensure_ascii=False, indent=2)
 
-        logger.info(f"  ✓ GeoJSON carto : {out.name}")
+        logger.info(f"   GeoJSON carto : {out.name}")
         return out
 
     def get_summary_stats(self) -> pd.DataFrame:
@@ -365,6 +365,6 @@ class DataTransformer:
 if __name__ == "__main__":
     transformer = DataTransformer()
     results = transformer.run()
-    print(f"\n✅ Transformations terminées :")
+    print(f"\n Transformations terminées :")
     for k, v in results.items():
         print(f"  {k} → {v}")

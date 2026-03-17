@@ -17,7 +17,7 @@ def sidebar(df_hist, scenarios):
         st.markdown(render("sidebar_header.html"), unsafe_allow_html=True)
 
         st.markdown(
-            '<div class="sidebar-section-label">📅 Période historique</div>',
+            '<div class="sidebar-section-label"> Période historique</div>',
             unsafe_allow_html=True,
         )
         periode_input = st.slider(
@@ -27,7 +27,7 @@ def sidebar(df_hist, scenarios):
         )
 
         st.markdown(
-            '<div class="sidebar-section-label">🔭 Horizon de projection</div>',
+            '<div class="sidebar-section-label"> Horizon de projection</div>',
             unsafe_allow_html=True,
         )
         horizon_input = st.select_slider(
@@ -38,7 +38,7 @@ def sidebar(df_hist, scenarios):
         )
 
         st.markdown(
-            '<div class="sidebar-section-label">📊 Scénarios GIEC</div>',
+            '<div class="sidebar-section-label"> Scénarios GIEC</div>',
             unsafe_allow_html=True,
         )
         sc_sel_input = st.multiselect(
@@ -48,7 +48,7 @@ def sidebar(df_hist, scenarios):
         )
 
         st.markdown(
-            '<div class="sidebar-section-label">🗺️ Territoire</div>',
+            '<div class="sidebar-section-label"> Territoire</div>',
             unsafe_allow_html=True,
         )
         territoire_opts = [
@@ -68,7 +68,7 @@ def sidebar(df_hist, scenarios):
 
         st.divider()
 
-        if st.button("✅ Appliquer les filtres", use_container_width=True, type="primary"):
+        if st.button(" Appliquer les filtres", use_container_width=True, type="primary"):
             st.session_state["applied"] = {
                 "periode": periode_input,
                 "horizon": horizon_input,

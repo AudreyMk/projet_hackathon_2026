@@ -66,7 +66,7 @@ def build_data():
     years = np.arange(1900, 2025)
     n = len(years)
 
-    # ── Températures (France) ─────────────────
+    #  Températures (France) 
     # Tendance observée : +1.7°C sur la période
     # Source : Météo France 2024
     trend_temp = np.linspace(0, 1.7, n)
@@ -91,11 +91,11 @@ def build_data():
     jours_gel = (65 - np.linspace(0, 18, n) + np.random.normal(0, 4, n)).clip(0).astype(int)
     precip = (720 - np.linspace(0, 35, n) + np.random.normal(0, 55, n)).clip(450)
 
-    # ── CO₂ (NOAA Mauna Loa + Law Dome) ───────
+    #  CO₂ (NOAA Mauna Loa + Law Dome) 
     co2 = 296 * np.exp(0.00182 * (years - 1900)) + np.where(years > 1950, (years - 1950) * 0.025, 0)
     co2 = co2.clip(296, 425)
 
-    # ── Score risque composite (0-100) ─────────
+    #  Score risque composite (0-100) 
     def norm01(x): return (x - x.min()) / (x.max() - x.min() + 1e-9)
     risk = (norm01(anomalie) * 40 + norm01(co2) * 35 + norm01(jours_chauds) * 25).clip(0, 100)
 
@@ -110,7 +110,7 @@ def build_data():
         "risk_score": (risk * 100 / risk.max()).round(1),
     })
 
-    # ── GES France (CITEPA Secten) 1990-2024 ──
+    #  GES France (CITEPA Secten) 1990-2024 
     ges_years = np.arange(1990, 2025)
     secteurs = {
         "Transport":     (165, -0.10, "#e74c3c"),
@@ -129,7 +129,7 @@ def build_data():
             ges_records.append({"annee": int(yr), "secteur": sect, "val": max(0, round(val, 1)), "color": color})
     df_ges = pd.DataFrame(ges_records)
 
-    # ── Empreinte carbone individuelle ─────────
+    #  Empreinte carbone individuelle 
     ec_years = np.arange(1995, 2025)
     empreinte = np.linspace(12.6, 9.9, len(ec_years)) + np.random.normal(0, 0.12, len(ec_years))
     importee = np.linspace(3.0, 4.5, len(ec_years))
@@ -140,7 +140,7 @@ def build_data():
         "nationale": (empreinte - importee).round(2),
     })
 
-    # ── Projections 2026-2100 (3 scénarios × 5 modèles) ────
+    #  Projections 2026-2100 (3 scénarios × 5 modèles) 
     scenarios = {
         "Optimiste (+1.4°C)":     {"delta": 1.4, "color": "#2ecc71",  "ssp": "SSP1-2.6", "dash": "dot"},
         "Intermédiaire (+2.7°C)": {"delta": 2.7, "color": "#f39c12",  "ssp": "SSP2-4.5", "dash": "solid"},
@@ -191,7 +191,7 @@ def build_data():
                 })
     df_proj = pd.DataFrame(proj_records)
 
-    # ── Données régionales (carto) ─────────────
+    #  Données régionales (carto) 
     # Noms correspondant exactement au GeoJSON france_regions.geojson
     regions = [
         ("Île-de-France",            48.85,  2.35,  "+1.9°C", 82),
