@@ -6,6 +6,7 @@ directement le fichier correspondant, par exemple :
     python collect_noaa.py
     python collect_datagouv.py
     python collect_vigicrues.py
+    python collect_refmar.py
 """
 
 from datetime import datetime
@@ -14,6 +15,7 @@ from pathlib import Path
 from helpers import setup_dirs
 from collect_datagouv  import collect_datagouv
 from collect_vigicrues import collect_vigicrues
+from collect_refmar    import collect_refmar
 from collect_noaa      import collect_noaa
 from config import ROOT_DIR
 
@@ -32,6 +34,10 @@ def main():
     p = collect_vigicrues()
     if p:
         all_results["vigicrues"] = p
+
+    p = collect_refmar()
+    if p:
+        all_results["shom_refmar"] = p
 
     all_results.update(collect_noaa())
 

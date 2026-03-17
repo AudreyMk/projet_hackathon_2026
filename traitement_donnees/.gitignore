@@ -1,0 +1,5 @@
+.outputs_climat/
+venv/
+.venv/
+env/
+ENV/
