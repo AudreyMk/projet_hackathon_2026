@@ -4,6 +4,8 @@ from web.tabs.emissions import tab_emissions
 from web.tabs.carte import tab_carte
 from web.tabs.preconisations import tab_preconisations
 from web.tabs.maregraphie import tab_maregraphie
+from web.tabs.temperatures import tab_temperatures
+from web.tabs.vigicrues import tab_vigicrues
 
 __all__ = [
     "tab_historique",
@@ -12,4 +14,6 @@ __all__ = [
     "tab_carte",
     "tab_preconisations",
     "tab_maregraphie",
+    "tab_temperatures",
+    "tab_vigicrues",
 ]

@@ -10,6 +10,7 @@ Dépendances minimales :
 Compatible Streamlit Cloud pour déploiement public.
 """
 
+import pandas as pd
 import streamlit as st
 
 from src import data_loader
@@ -25,6 +26,8 @@ from web.tabs import (
     tab_carte,
     tab_preconisations,
     tab_maregraphie,
+    tab_temperatures,
+    tab_vigicrues,
 )
 
 st.set_page_config(
@@ -60,6 +63,7 @@ def _build_hist(df_hist_synth):
 def main():
     df_hist_synth, df_ges, df_ec, df_proj, df_reg, scenarios = build_data()
     df_hist = _build_hist(df_hist_synth)
+    real    = _load_real()
 
     periode, horizon, sc_sel, territoire = sidebar(df_hist, scenarios)
 
@@ -73,6 +77,8 @@ def main():
         "Carte régionale",
         "Préconisations",
         "Marégraphie",
+        "Températures",
+        "Vigicrues",
     ])
 
     with tabs[0]:
@@ -87,6 +93,10 @@ def main():
         tab_preconisations(df_hist)
     with tabs[5]:
         tab_maregraphie()
+    with tabs[6]:
+        tab_temperatures(real, periode)
+    with tabs[7]:
+        tab_vigicrues(real.get("vigigrues", pd.DataFrame()))
 
     st.markdown(render("footer.html"), unsafe_allow_html=True)
 

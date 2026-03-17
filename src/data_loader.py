@@ -187,7 +187,6 @@ def build_annual_features(df_monthly: pd.DataFrame) -> pd.DataFrame:
         "tmoy": "temp_moy_c",
         "tmax": "tmax_moy_c",
         "tmin": "tmin_moy_c",
-        "nom_station": "nb_stations",
     }
     df_ann = df_ann.rename(columns={k: v for k, v in rename.items() if k in df_ann.columns})
     df_ann["annee"] = df_ann["annee"].astype(int)
@@ -374,6 +373,31 @@ def load_vigigrues(path: Path | None = None) -> pd.DataFrame:
 # ║  POINT D'ENTRÉE UNIQUE (utilisé par le dashboard)           ║
 # ╚══════════════════════════════════════════════════════════════╝
 
+def _load_annual_parquet() -> pd.DataFrame:
+    """
+    Charge temperatures_annuelles.parquet si disponible et le met en forme
+    pour que _build_hist() dans app.py puisse mapper les colonnes correctement.
+
+    Colonnes source  → colonnes cibles attendues par _build_hist() :
+      temp_anomalie_c → anomalie_temp_c
+      jours_chauds_30 → nb_jours_tx30
+    """
+    parquet_path = DATA_RAW / "meteofrance" / "temperatures_annuelles.parquet"
+    if not parquet_path.exists():
+        return pd.DataFrame()
+
+    df = pd.read_parquet(parquet_path)
+    rename = {
+        "temp_anomalie_c": "anomalie_temp_c",
+        "jours_chauds_30": "nb_jours_tx30",
+    }
+    df = df.rename(columns={k: v for k, v in rename.items() if k in df.columns})
+    df = df.sort_values("annee").reset_index(drop=True)
+    logger.info(f"📦 Parquet météo chargé : {len(df)} années "
+                f"({df['annee'].min()}–{df['annee'].max()})")
+    return df
+
+
 def load_all(
     avant_path:    Path | None = None,
     apres_path:    Path | None = None,
@@ -390,6 +414,14 @@ def load_all(
     """
     df_monthly  = load_meteo(avant_path, apres_path)
     df_annual   = build_annual_features(df_monthly)
+
+    # Si le pipeline CSV n'a rien produit (fichiers absents), utiliser le parquet existant
+    if df_monthly.empty:
+        parquet_annual = _load_annual_parquet()
+        if not parquet_annual.empty:
+            df_annual = parquet_annual
+            logger.info("✅ Données annuelles chargées depuis temperatures_annuelles.parquet")
+
     df_stations = build_stations_df(df_monthly)
     df_vigi     = load_vigigrues(vigigrues_path)
 
