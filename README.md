@@ -60,23 +60,92 @@ hackathon26_climat/
 
 ## ⚡ Lancement rapide
 
+### 🍎 macOS / Linux
+
 ```bash
-# 1. Cloner & installer
-git clone <repo> && cd hackathon26_climat
-python -m venv venv && source venv/bin/activate
+# 1. Cloner le dépôt
+git clone <repo>
+cd hackathon26_climat
+
+# 2. Créer et activer l'environnement virtuel
+python3 -m venv venv
+source venv/bin/activate
+
+# 3. Installer les dépendances
 pip install -r requirements.txt
 
-# 2. Lancer le dashboard (100% autonome, aucune clé API requise)
+# 4. Lancer le dashboard (100% autonome, aucune clé API requise)
 streamlit run app.py
 # → http://localhost:8501
 
-# 3. (Optionnel) Pipeline complet ingestion → processing → modèles
+# 5. (Optionnel) Pipeline complet ingestion → processing → modèles
 cp .env.example .env   # Ajouter les clés API si nécessaire
 make all
 
-# 4. (Optionnel) MLflow UI
+# 6. (Optionnel) MLflow UI
 make mlflow
 ```
+
+### 🪟 Windows (PowerShell)
+
+```powershell
+# 1. Cloner le dépôt
+git clone <repo>
+cd hackathon26_climat
+
+# 2. Créer et activer l'environnement virtuel
+python -m venv venv
+venv\Scripts\Activate.ps1
+
+# Si l'activation est bloquée par la politique d'exécution :
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# 3. Installer les dépendances
+pip install -r requirements.txt
+
+# 4. Lancer le dashboard (100% autonome, aucune clé API requise)
+streamlit run app.py
+# → http://localhost:8501
+
+# 5. (Optionnel) Variables d'environnement
+copy .env.example .env   # Puis éditer .env avec vos clés API
+
+# 6. (Optionnel) MLflow UI (nécessite make — installer via choco ou scoop)
+make mlflow
+# Ou sans make :
+mlflow ui --backend-store-uri ./mlflow_runs
+```
+
+### 🪟 Windows (Invite de commandes — CMD)
+
+```cmd
+:: 1. Cloner le dépôt
+git clone <repo>
+cd hackathon26_climat
+
+:: 2. Créer et activer l'environnement virtuel
+python -m venv venv
+venv\Scripts\activate.bat
+
+:: 3. Installer les dépendances
+pip install -r requirements.txt
+
+:: 4. Lancer le dashboard
+streamlit run app.py
+```
+
+---
+
+## 📋 Prérequis
+
+| Outil | Version minimale | Vérification |
+|-------|-----------------|--------------|
+| Python | 3.10+ | `python --version` |
+| pip | 23+ | `pip --version` |
+| Git | 2.x | `git --version` |
+| (Optionnel) make | — | macOS : `xcode-select --install` · Windows : [chocolatey](https://chocolatey.org/) `choco install make` |
+
+> **Note Windows** : si `python` n'est pas reconnu, essayer `py` à la place. Vérifier que Python est bien ajouté au PATH lors de l'installation.
 
 ---
 
@@ -88,7 +157,7 @@ Configurable dans `config/settings.py` : France entière / Région / Commune.
 | Onglet | Contenu |
 |--------|---------|
 | 📈 Historique | Températures 1900-2024, anomalies, CO₂, corrélations décennales |
-| 🔮 Projections 2100 | Scénarios GIEC SSP1/2/5 avec bandes d'incertitude à 95% |
+| 🔮 Projections 2100 | Scénarios GIEC SSP1/2/5 avec bandes d'incertitude à 95% + choix du modèle |
 | 🏭 Émissions GES | Émissions par secteur, empreinte carbone individuelle |
 | 🗺️ Carte régionale | Choroplèthe risque/anomalie par région (GeoJSON officiel) |
 | 🌱 Préconisations | Actions citoyennes classées + calculette carbone interactive |
@@ -109,10 +178,11 @@ Configurable dans `config/settings.py` : France entière / Région / Commune.
 | 10| Risque climatique régional | Composite (anomalie + CO₂ + chaleur) | Impact visible |
 
 ## 🤖 Modèles IA
-- **ARIMA/SARIMA** — Baseline statistique
-- **Prophet** — Tendances + saisonnalité
-- **LSTM/GRU** — Deep learning séries temporelles
-- **XGBoost/LightGBM** — Gradient Boosting multivarié
+- **ARIMA/SARIMA** — Baseline statistique, conservateur, fort sur les tendances linéaires
+- **Prophet** — Tendances + saisonnalité (Facebook Research)
+- **LSTM/GRU** — Deep learning, capte les patterns non-linéaires d'accélération
+- **XGBoost/LightGBM** — Gradient Boosting multivarié, robuste aux outliers
+- **Consensus** — Moyenne pondérée des 4 modèles (réduction du biais individuel)
 
 ## 🗓️ Projections
 Scénarios GIEC pour 2030 / 2050 / 2100 :
